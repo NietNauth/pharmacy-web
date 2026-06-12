@@ -136,13 +136,7 @@ export const ProfilePage = () => {
       resetPassword()
     },
     onError: (err: any) => {
-      const errors = err.response?.data?.errors;
-      if (errors) {
-        const firstError = Object.values(errors)[0] as string[];
-        toast.error(firstError[0] || 'Dữ liệu không hợp lệ');
-      } else {
-        toast.error(err.response?.data?.message || 'Không thể đổi mật khẩu');
-      }
+      toast.error(err.message || 'Không thể đổi mật khẩu');
     }
   })
 
