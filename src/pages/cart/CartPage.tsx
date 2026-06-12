@@ -29,6 +29,51 @@ import { cn } from '../../utils/cn'
 import { toast } from 'react-hot-toast'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
 
+const CartQuantityInput = ({ 
+  initialValue, 
+  onUpdate 
+}: { 
+  initialValue: number, 
+  onUpdate: (val: number) => void 
+}) => {
+  const [val, setVal] = useState<string | number>(initialValue)
+
+  useEffect(() => {
+    setVal(initialValue)
+  }, [initialValue])
+
+  const handleBlur = () => {
+    const parsed = parseInt(val.toString().replace(/[^0-9]/g, ''), 10)
+    if (isNaN(parsed) || parsed < 1) {
+      setVal(initialValue)
+    } else if (parsed !== initialValue) {
+      onUpdate(parsed)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.currentTarget.blur()
+    }
+  }
+
+  return (
+    <input
+      type="text"
+      inputMode="numeric"
+      pattern="[0-9]*"
+      value={val === 0 ? '' : val}
+      onChange={(e) => {
+        const inputVal = e.target.value.replace(/[^0-9]/g, '')
+        setVal(inputVal === '' ? 0 : parseInt(inputVal, 10))
+      }}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      className="w-12 text-center font-black text-lg border-none outline-none focus:ring-0 p-0 bg-transparent"
+    />
+  )
+}
+
 export const CartPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -195,7 +240,10 @@ export const CartPage = () => {
                     >
                       <Minus size={18} />
                     </button>
-                    <span className="w-12 text-center font-black text-lg">{item.quantity}</span>
+                    <CartQuantityInput 
+                      initialValue={item.quantity} 
+                      onUpdate={(val) => handleUpdateQuantity(item.id, val)} 
+                    />
                     <button 
                       onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                       className="p-2 hover:bg-white rounded-lg text-text-muted transition-colors shadow-sm"

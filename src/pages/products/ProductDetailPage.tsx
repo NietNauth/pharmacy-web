@@ -305,7 +305,22 @@ export const ProductDetailPage = () => {
                     >
                       <Minus size={16} />
                     </button>
-                    <span className="w-10 text-center font-black text-base">{quantity}</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={quantity === 0 ? '' : quantity}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        setQuantity(val === '' ? 0 : parseInt(val, 10));
+                      }}
+                      onBlur={() => {
+                        if (quantity < 1) {
+                          setQuantity(1);
+                        }
+                      }}
+                      className="w-10 text-center font-black text-base border-none outline-none focus:ring-0 p-0 bg-transparent"
+                    />
                     <button
                       onClick={() => setQuantity(q => q + 1)}
                       className="p-2 hover:bg-bg-subtle rounded-lg text-text-muted transition-colors"
