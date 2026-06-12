@@ -62,9 +62,9 @@ export const ProductDetailPage = () => {
   }, [slug])
 
   const { data: qasData } = useQuery({
-    queryKey: ['qas', slug, qaLimit],
+    queryKey: ['qas', productRes?.data?.id, qaLimit],
     queryFn: () => productApi.getQas(productRes!.data.id, { per_page: qaLimit }),
-    enabled: !!productRes?.data.id && productRes.data.slug === slug
+    enabled: !!productRes?.data?.id && productRes.data.slug === slug
   })
 
   const { data: relatedProducts } = useQuery({
